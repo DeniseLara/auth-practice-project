@@ -7,6 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Base de datos SQLite
+*.db
+*.db3
+*.sqlite
+*.sqlite3
+
 # Logs
 logs
 *.log
