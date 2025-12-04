@@ -12,6 +12,8 @@ lerna-debug.log*
 *.db3
 *.sqlite
 *.sqlite3
+database.sqlite
+database.sqlite3
 
 # Logs
 logs
