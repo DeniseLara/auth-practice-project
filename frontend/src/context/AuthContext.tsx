@@ -1,7 +1,7 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import type { User } from "../types/user.type";
 
-const URL = 'http://localhost:3000/auth';
+const API = import.meta.env.VITE_AUTH_API;
 
 export interface AuthContextType {
     user: User | null
@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         async function checkAuth() {
             try {
-                const res = await fetch(`${URL}/profile`, {
+                const res = await fetch(`${API}/profile`, {
                     credentials: "include",   
                 });
 

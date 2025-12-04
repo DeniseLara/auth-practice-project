@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { AuthController } from "./auth.controller";
+import { TaskService } from "./task.service";
+import { TaskController } from "./task.controller";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Task } from "./entities/task.entity";
 import { JwtModule } from "@nestjs/jwt";
-import { UserModule } from "src/users/user.module";
-import { AuthGuard } from "./auth.guard";
 import { ConfigService } from "@nestjs/config";
 
 @Module({
-    imports:[
-        UserModule,
+    imports: [
+        TypeOrmModule.forFeature([Task]),
         JwtModule.registerAsync({
             useFactory: async (configService: ConfigService) => ({
                 secret: configService.get<string>('JWT_SECRET'),
@@ -17,8 +17,7 @@ import { ConfigService } from "@nestjs/config";
             inject: [ConfigService]
         }),
     ],
-    providers: [AuthService, AuthGuard],
-    controllers: [AuthController],
-    exports: [JwtModule], 
+    providers:[TaskService],
+    controllers:[TaskController],
 })
-export class AuthModule {}
+export class TaskModule {}

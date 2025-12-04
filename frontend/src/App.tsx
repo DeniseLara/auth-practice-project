@@ -1,9 +1,9 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { useAuthContext } from './context/AuthContext';
-
-import LoginForm from "./pages/LoginForm";
-import RegisterForm from "./pages/RegisterForm";
-import HomePage from './pages/HomePage';
+import LoginForm from "./pages/AuthPage/LoginForm";
+import RegisterForm from "./pages/AuthPage/RegisterForm";
+import HomePage from './pages/HomePage/HomePage';
+import TaskPage from "./pages/TaskPage/TaskPage";
 
 function App() {
   const { user, loading } = useAuthContext()
@@ -15,7 +15,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginForm/>}/>
         <Route path="/register" element={<RegisterForm/>}/>
-        <Route path="/home" element={user ? <HomePage/>: <LoginForm/>}/>
+        <Route path="/home" element={user ? <HomePage/>: <Navigate to="/" />}/>
+        <Route path="/tasks" element={user ? <TaskPage/>: <Navigate to="/" />}/>
       </Routes>
     </main>
   );

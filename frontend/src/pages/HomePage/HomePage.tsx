@@ -1,17 +1,19 @@
-import { useAuthContext } from "../context/AuthContext";
-import { useAuth } from "../hooks/useAuth";
-import { MdDone } from "react-icons/md";
 import './HomePage.css'
+import { MdDone } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
+
 
 export default function HomePage() {
-    const { user } = useAuthContext()
-    const { logout } = useAuth()
+  const { user } = useAuthContext()
+  const { logout } = useAuth()
 
-    const handleLogout = async() => {
-        await logout();
-    }
+  const handleLogout = async() => {
+    await logout();
+  }
 
-    return(
+  return(
     <div className="home-page">
       <div className="home-container">
         <div className="welcome-card">
@@ -75,7 +77,11 @@ export default function HomePage() {
           <button onClick={handleLogout} className="logout-btn">
             Cerrar sesión
           </button>
+          <span>
+            Ir a la página de <Link to="/tasks">Tareas</Link>
+          </span>
         </div>
+
         <footer className="home-footer">
           <p>Proyecto de práctica - Auth con NestJS & React</p>
           <p className="footer-sub">Hecho con 💜, café ☕ y ganas de aprender</p>

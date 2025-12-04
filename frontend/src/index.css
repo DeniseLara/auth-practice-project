@@ -50,8 +50,6 @@
 
 body {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
   font-family: var(--font-body);
   justify-content: center;
   background: var(--color-secondary);

@@ -1,35 +1,43 @@
-import { ConflictException, Injectable } from "@nestjs/common";
-import { User } from "./user.type";
+import { Injectable, ConflictException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User } from "./entities/user.entity";
+import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-import { randomUUID } from "crypto";
 
 @Injectable()
 export class UserService {
-    private users: User[] = [];
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) {}
 
     async createUser(body: { email: string, password: string, name: string }): Promise<User> {
-        const existingUser = this.users.find(u => u.email === body.email) 
+        // Verificar si el usuario ya existe
+        const existingUser = await this.userRepository.findOne({ 
+            where: { email: body.email } 
+        });
+        
         if (existingUser) {
-            throw new ConflictException("Usuario ya existe");
+            throw new ConflictException('User already exists');
         }
 
         const hashedPassword = await bcrypt.hash(body.password, 10)
 
-        const user: User = {
-            id: randomUUID(),
-            email: body.email,
-            password: hashedPassword,
-            name: body.name
-        }
-        this.users.push(user)
-        return user
+        const user: User = await this.userRepository.create({
+                id: uuidv4(),
+                email: body.email,
+                password: hashedPassword,
+                name: body.name,
+        })
+        return this.userRepository.save(user);
     }
 
-    findByEmail(email: string): User | undefined {
-        return this.users.find(u => u.email === email)
+    async findByEmail(email: string): Promise<User | null> {
+        return this.userRepository.findOne({ where: { email }})
     }
 
-    findOne(id: string) {
-        return this.users.find(u => u.id === id)
+    async findOne(id: string) {
+        return this.userRepository.findOne({ where: { id }});
     }
 }

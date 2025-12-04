@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState, type FormEvent, ChangeEvent } from "react";
-import { useAuth } from "../hooks/useAuth";
 import './Form.css'
+import { useState, type FormEvent, ChangeEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function RegisterForm() {
     const [formData, setFormData] = useState({

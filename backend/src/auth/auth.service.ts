@@ -12,7 +12,7 @@ export class AuthService {
     ) {}
     
     async registerUser(body: RegisterDto): Promise<AuthResponseDto> {
-        const exitingUser = this.userService.findByEmail(body.email);
+        const exitingUser = await this.userService.findByEmail(body.email);
         if (exitingUser) {
             throw new ConflictException("El usuario ya existe");
         }
@@ -42,7 +42,7 @@ export class AuthService {
 
     async loginUser(body: LoginDto) {
         // buscar usuario registrado
-        const user = this.userService.findByEmail(body.email)
+        const user = await this.userService.findByEmail(body.email)
         if (!user) {
             throw new UnauthorizedException("email inválido");
         }

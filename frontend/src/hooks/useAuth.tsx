@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { LoginData, RegisterData, User } from "../types/user.type";
+import { LoginData, RegisterData } from "../types/user.type";
 import { useAuthContext } from "../context/AuthContext";
 
-const URL = 'http://localhost:3000/auth';
+const API = import.meta.env.VITE_AUTH_API;
 
 export function useAuth() {
     const { setUser } = useAuthContext()
@@ -14,7 +14,7 @@ export function useAuth() {
         setError(null)
 
         try {
-            const res = await fetch(`${URL}/register`, {
+            const res = await fetch(`${API}/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -41,7 +41,7 @@ export function useAuth() {
         setError(null);
 
         try {
-            const res = await fetch(`${URL}/login`, {
+            const res = await fetch(`${API}/login`, {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 credentials: "include",
@@ -67,7 +67,7 @@ export function useAuth() {
         setLoading(true);
 
         try {
-            await fetch(`${URL}/logout`, {
+            await fetch(`${API}/logout`, {
                 method: "POST",
                 credentials: "include",
             });
