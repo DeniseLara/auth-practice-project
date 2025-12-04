@@ -1,44 +1,67 @@
-# 🔐 Sistema de Autenticación y Gestión de Tareas - NestJS + React
+# 🔐 Sistema de Autenticación y Gestión de Tareas — NestJS + React
 
-Sistema completo de autenticación y gestión de tareas desarrollado como proyecto de práctica para reforzar conocimientos en desarrollo fullstack.
+Proyecto fullstack creado como práctica para reforzar conocimientos en backend y frontend, incluyendo autenticación con JWT, manejo de cookies seguras y una aplicación completa de gestión de tareas.
 
+---
 
 ## 🛠️ Tech Stack
-- **Backend**: NestJS + TypeScript + JWT + Cookies HTTP-only + TypeORM + SQLite
-- **Frontend**: React + Vite + Context + Custom Hooks
-- **Autenticación**: JWT en cookies seguras
 
+### Backend
+- NestJS  
+- TypeScript  
+- TypeORM + SQLite  
+- JWT  
+- Cookies HTTP-only  
 
-## 🚀 Características implementadas
+### Frontend
+- React + Vite  
+- Context API  
+- Custom Hooks  
 
-### Autenticación & Seguridad
-- Registro de usuarios
-- Login con JWT
-- Cookies HTTP-only
-- Rutas protegidas
-- Context API para estado global
+### Autenticación
+- JWT almacenado en cookies seguras (HTTP-only)
 
-### Gestión de Tareas (To-Do List)
-- CRUD completo de tareas (Create, Read, Update, Delete)
-- Crear nuevas tareas con título y descripción
-- Marcar/desmarcar tareas como completadas
-- Eliminar tareas individuales
-- Filtrado por estado (Todas/Completadas/Pendientes)
+---
 
+## 🚀 Características Implementadas
+
+### 🔒 Autenticación & Seguridad
+- Registro de usuarios  
+- Login con JWT  
+- Cookies seguras HTTP-only  
+- Rutas protegidas  
+- Estado global con Context API  
+
+### 📝 Gestión de Tareas (To-Do List)
+- CRUD completo de tareas  
+- Crear tareas con título y descripción  
+- Marcar/desmarcar como completadas  
+- Eliminar tareas individuales  
+- Filtro por estado: **Todas / Completadas / Pendientes**
+
+---
 
 ## 🏗️ Arquitectura del Proyecto
-- Modulos separados: Auth, Users, Tasks
-- Entidades TypeORM con relaciones
-- Servicios y controladores organizados
-- Custom hooks para manejo de estado
 
+### Backend
+- Módulos: **Auth**, **Users**, **Tasks**  
+- Entidades con relaciones usando TypeORM  
+- Servicios y controladores organizados por funcionalidad  
+
+### Frontend
+- Custom Hooks para autenticación y tareas  
+- Componentes reutilizables  
+- Manejo de estado global con Context  
+
+---
 
 ## 🚧 Próximas Funcionalidades
-- Editar tareas existentes
-- Buscar tareas por texto
-- Categorías/etiquetas para tareas
-- Tema oscuro/claro
+- Editar tareas  
+- Buscar tareas por texto  
+- Categorías / etiquetas  
+- Tema oscuro / claro  
 
+---
 
 ## ✨ Autor
-Desarrollado como proyecto de práctica para reforzar conocimientos en NestJS, React, TypeScript y desarrollo fullstack.
+Proyecto realizado como práctica para reforzar habilidades en **NestJS**, **React**, **TypeScript** y desarrollo **fullstack**.
