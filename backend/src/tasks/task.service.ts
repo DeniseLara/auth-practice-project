@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Task } from "./entities/task.entity";
 import { Repository } from "typeorm";
 import { CreateTaskDto } from "./dto/create-task.dto";
+import { UpdateTaskDto } from "./dto/update-task.dto";
 
 @Injectable()
 export class TaskService {
@@ -30,7 +31,7 @@ export class TaskService {
         return this.formatTask(savedTask)
     }
 
-    async updateTask(id: string, completed: boolean, userId: string): Promise<Task> {
+    async toggleTaskCompletion(id: string, completed: boolean, userId: string): Promise<Task> {
         const task = await this.taskRepository.findOne({
             where: { id, userId }
         });
@@ -44,6 +45,21 @@ export class TaskService {
 
         const updatedTask = await this.taskRepository.save(task)
 
+        return this.formatTask(updatedTask)
+    }
+
+    async editTask(id: string, updateData: UpdateTaskDto, userId: string) {
+        const task = await this.taskRepository.findOne({
+            where: { id, userId }
+        });
+
+        if (!task) {
+            throw new NotFoundException("Tarea no encontrada");
+        }
+
+        Object.assign(task, updateData);
+
+        const updatedTask = await this.taskRepository.save(task);
         return this.formatTask(updatedTask)
     }
 
@@ -65,8 +81,10 @@ export class TaskService {
             userId: task.userId,
             // Fecha en formato ISO 
             createdAt: task.createdAt.toISOString(),
+            updatedAt: task.updatedAt.toISOString(),
             // Fecha formateada para mostrar 
-            createdAtFormatted: this.formatDate(task.createdAt)
+            createdAtFormatted: this.formatDate(task.createdAt),
+            updatedAtFormatted: this.formatDate(task.updatedAt)
         };
     }
 

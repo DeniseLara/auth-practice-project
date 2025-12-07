@@ -82,7 +82,8 @@ export default function LoginForm() {
 
                     <div className="auth-footer">
                         <span className="auth-link-text">
-                            ¿No tienes una cuenta? <Link to="/register" className="auth-link">Regístrate aquí</Link>
+                            ¿No tienes una cuenta? 
+                            <Link to="/register" className="auth-link">Regístrate aquí</Link>
                         </span>
                     </div>
                 </form>

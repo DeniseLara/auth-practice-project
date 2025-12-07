@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Request, UseGuards } from "@nestjs/common";
 import { TaskService } from "./task.service";
 import { CreateTaskDto } from "./dto/create-task.dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import type { RequestWithUser } from "./request-with-user.interface";
+import { UpdateTaskDto } from "./dto/update-task.dto";
 
 @Controller('tasks')
 @UseGuards(AuthGuard)
@@ -22,13 +23,22 @@ export class TaskController {
         return this.taskService.createTask(body, req.user.userId)
     }
 
-    @Put(':id')
-    update(
+    @Patch(':id')
+    toggle(
         @Param('id') id: string,
         @Body() body: { completed: boolean }, 
         @Request() req: RequestWithUser
     ) {
-        return this.taskService.updateTask(id, body.completed, req.user.userId)
+        return this.taskService.toggleTaskCompletion(id, body.completed, req.user.userId)
+    }
+
+    @Put(':id')
+    edit(
+        @Param('id') id: string,
+        @Body() updateData: UpdateTaskDto,
+        @Request() req: RequestWithUser
+    ) {
+        return this.taskService.editTask(id, updateData, req.user.userId)
     }
 
     @Delete(':id')

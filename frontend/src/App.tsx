@@ -4,6 +4,7 @@ import LoginForm from "./pages/AuthPage/LoginForm";
 import RegisterForm from "./pages/AuthPage/RegisterForm";
 import HomePage from './pages/HomePage/HomePage';
 import TaskPage from "./pages/TaskPage/TaskPage";
+import { TaskProvider } from "./context/TaskContext";
 
 function App() {
   const { user, loading } = useAuthContext()
@@ -16,7 +17,10 @@ function App() {
         <Route path="/" element={<LoginForm/>}/>
         <Route path="/register" element={<RegisterForm/>}/>
         <Route path="/home" element={user ? <HomePage/>: <Navigate to="/" />}/>
-        <Route path="/tasks" element={user ? <TaskPage/>: <Navigate to="/" />}/>
+        <Route path="/tasks" element={
+          user 
+          ? <TaskProvider><TaskPage/></TaskProvider> 
+          : <Navigate to="/" />}/>
       </Routes>
     </main>
   );

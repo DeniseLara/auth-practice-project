@@ -58,20 +58,10 @@
   transform: translateY(0);
 }
 
-
-/* Header Section */
-.task-page__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-  flex-wrap: wrap;
-}
-
 .header-content {
   flex: 1;
   min-width: 250px;
+  margin-bottom: var(--spacing-xl);
 }
 
 .task-page__title {
@@ -88,7 +78,6 @@
   font-weight: 300;
 }
 
-/* Task Statistics */
 .task-stats {
   display: flex;
   align-items: center;
@@ -252,7 +241,6 @@
   cursor: pointer;
 }
 
-/* Task Content */
 .task-card__content {
   display: flex;
   flex-direction: column;
@@ -260,7 +248,6 @@
   min-width: 0;
 }
 
-/* Filter Tabs */
 .filter-tabs {
   display: flex;
   gap: var(--spacing-sm);
@@ -346,11 +333,18 @@
 
 .task-card__date {
   font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   color: var(--color-text-muted);
   font-weight: 500;
 }
 
-/* Task Actions */
+.task-card__date svg {
+  font-size: 1rem;
+  stroke-width: unset;
+}
+
 .task-card__actions {
   display: flex;
   flex-direction: column;
@@ -401,6 +395,54 @@
   transform: scale(0.95);
 }
 
+.btn-edit {
+  background: transparent;
+  border: 2px solid var(--color-border);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-edit:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-edit:disabled {
+  background: var(--color-bg-hover);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-edit:disabled:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-edit:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -412,11 +454,6 @@
     font-size: 0.9rem;
     padding: var(--spacing-xs) var(--spacing-sm);
     margin-bottom: var(--spacing-md);
-  }
-
-  .task-page__header {
-    flex-direction: column;
-    gap: var(--spacing-md);
   }
 
   .task-stats {

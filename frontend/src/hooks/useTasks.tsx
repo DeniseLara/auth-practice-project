@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Task } from "../types/task.type";
+import type { Task, UpdateTaskData } from "../types/task.type";
 import { TaskFormData } from "../types/task.type";
 
 const API = import.meta.env.VITE_TASKS_API
@@ -32,6 +32,7 @@ export function useTasks() {
 
     }, []);
 
+
     const createTask = useCallback(async (taskData: TaskFormData) => {
         setError(null);
 
@@ -57,7 +58,7 @@ export function useTasks() {
     }, []);
 
 
-    const handleDelete = async(id: string) => {
+    const handleDelete = useCallback(async(id: string) => {
         try {
             await fetch(`${API}/${id}`, {
                 method: "DELETE",
@@ -68,12 +69,13 @@ export function useTasks() {
             setError(err instanceof Error ? err.message : 'Error al eliminar tarea');
             console.error('Error al eliminar tarea:', err); 
         }
-    }
+    }, [])
 
-    const handleUpdate = async(id: string, completedSatus: boolean) => {
+
+    const toggleCompletion = useCallback(async(id: string, completedSatus: boolean) => {
         try {
             const res = await fetch(`${API}/${id}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: { "Content-type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify({ completed: !completedSatus })
@@ -98,11 +100,45 @@ export function useTasks() {
             console.error('Error al actualizar tarea:', err);
             return { success: false, error: message };
         }
-    }
+    }, [])
+
+
+    const handleEdit = useCallback(async (id: string, updateData: UpdateTaskData) => {
+        try {
+            const res = await fetch(`${API}/${id}`, {
+                method: "PUT",
+                headers: { "Content-type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(updateData)
+            });
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`Error ${res.status}: ${errorText}`);
+            }
+
+            const updatedTask = await res.json();
+            setTasks(prev => prev.map(task => 
+                task.id === id ? { ...task, ...updatedTask} : task
+            ))
+             return { 
+                success: true, 
+                data: updatedTask,
+                message: 'Tarea actualizada correctamente' 
+            };
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'Error al actualizar tarea';
+            setError(message);
+            console.error('Error al actualizar tarea:', err);
+            return { success: false, error: message };
+        }
+    }, [])
+
 
     useEffect(() =>  {
         fetchTasks()
     }, [fetchTasks]);
+    
 
     return {
         tasks,
@@ -110,7 +146,8 @@ export function useTasks() {
         error,
         fetchTasks,
         createTask,
-        handleUpdate,
+        toggleCompletion,
+        handleEdit,
         handleDelete
     }
 }

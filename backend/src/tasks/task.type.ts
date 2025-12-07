@@ -5,6 +5,7 @@ export interface Task {
   completed: boolean;
   userId: string;
   createdAt: Date;
+  updatedAt: Date
 }
 
 export interface TaskResponseDto {
@@ -14,4 +15,5 @@ export interface TaskResponseDto {
   completed: boolean;
   userId: string;
   createdAt: Date;
+  updatedAt: Date
 }

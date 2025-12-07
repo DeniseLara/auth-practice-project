@@ -97,7 +97,8 @@ export default function RegisterForm() {
 
                     <div className="auth-footer">
                         <span className="auth-link-text">
-                            ¿Ya tienes una cuenta? <Link to="/" className="auth-link">Inicia sesión aquí</Link>
+                            ¿Ya tienes una cuenta? 
+                            <Link to="/" className="auth-link">Inicia sesión aquí</Link>
                         </span>
                     </div>
                 </form>

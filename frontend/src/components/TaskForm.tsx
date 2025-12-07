@@ -1,38 +1,44 @@
 import './TaskForm.css'
-import { useState, type FormEvent } from 'react';
+import { ChangeEvent, useState, type FormEvent } from 'react';
 import type { TaskFormData } from '../types/task.type';
+import { useTaskContext } from '../context/TaskContext';
 
 const API = import.meta.env.VITE_HABITS_API
 
+const DEFAULT_VALUES: TaskFormData = {
+  title: "",
+  description: ""
+} 
+
 interface TaskFormProps {
   initialData?: TaskFormData;
-  createTask: (data: TaskFormData) => void
   isLoading: boolean
 }
 
 export default function TaskForm({ 
   initialData, 
-  createTask,
   isLoading 
 }: TaskFormProps) {
-  const [title, setTitle] = useState(initialData?.title || "");
-  const [description, setDescription] = useState(initialData?.description || "")
+  const { createTask } = useTaskContext()
+  const [formData, setFormData] = useState<TaskFormData>(initialData || DEFAULT_VALUES)
 
   const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!title.trim()) {
+    if (!formData.title.trim()) {
       alert('El título de la tarea no puede estar vacío.'); 
       return; 
     }
 
-    await createTask({
-      title,
-      description
-    });
-    setTitle("")
-    setDescription("")
+    await createTask(formData);
+
+    setFormData(DEFAULT_VALUES)
   };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({...prev, [name]: value}))
+  }
 
   return (
     <div className="task-form-container">
@@ -46,8 +52,9 @@ export default function TaskForm({
             <input
               id="task-title"
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              name='title'
+              value={formData.title}
+              onChange={handleChange}
               placeholder="Ej: Completar informe mensual"
               className="form-input"
               disabled={isLoading}
@@ -59,12 +66,12 @@ export default function TaskForm({
           <div className="form-group">
             <label htmlFor="task-description" className="form-label">
               Descripción
-              <span className="form-label__required">*</span>
             </label>
             <textarea
               id="task-description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              name='description'
+              value={formData.description}
+              onChange={handleChange}
               placeholder="Describe los detalles de tu tarea..."
               className="form-textarea"
               disabled={isLoading}
@@ -72,7 +79,7 @@ export default function TaskForm({
               rows={3}
             />
             <span className="form-hint">
-              {description.length}/300 caracteres
+              {formData.description.length}/300 caracteres
             </span>
           </div>
         </div>

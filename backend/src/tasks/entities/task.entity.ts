@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
 
@@ -25,6 +25,9 @@ export class Task {
   @Column({ name: 'user_id' })
   userId: string;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
