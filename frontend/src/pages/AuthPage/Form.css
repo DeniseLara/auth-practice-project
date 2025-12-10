@@ -200,6 +200,51 @@
   font-size: 1rem;
 }
 
+.input-error {
+    border-color: #ff3860 !important;
+    background-color: #fff5f5;
+}
+
+.input-error:focus {
+    border-color: #ff3860;
+    box-shadow: 0 0 0 0.125em rgba(255, 56, 96, 0.25);
+}
+
+.error-text {
+    color: #ff3860;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+    min-height: 1.25rem;
+}
+
+/* Asegúrate que los inputs tengan estos estilos base */
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Mejora el mensaje de error del servidor */
+.error-message {
+    background-color: #fff5f5;
+    border: 1px solid #ff3860;
+    color: #ff3860;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);

@@ -1,30 +1,26 @@
 import './Form.css'
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { LoginData } from '../../types/user.type';
 
 export default function LoginForm() {
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
-    });
-    const { login, loading, error } = useAuth();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset
+    } = useForm<LoginData>()
+    const { login, loading, error: authError } = useAuth();
     const navigate = useNavigate()
 
-    const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const success = await login(formData);
+    const onSubmit = async(data: LoginData) => {
+        const success = await login(data);
 
         if (success) {
-            setFormData({ email: "", password: ""})
-            navigate("/home")
+            reset()
+            navigate("/tasks")
         }
-    }
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({...prev, [name]: value}))
     }
     
     return(
@@ -36,11 +32,11 @@ export default function LoginForm() {
                     <p className="auth-subtitle">Accede a tu cuenta para continuar</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="auth-form">
-                    {error && (
+                <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
+                    {authError && (
                         <div className="error-message">
                             <span>⚠️</span>
-                            {error}
+                            {authError}
                         </div>
                     )}
                     
@@ -48,28 +44,42 @@ export default function LoginForm() {
                         <label htmlFor="email" className="form-label">Correo Electrónico</label>
                         <input 
                             id="email" 
-                            name="email" 
-                            value={formData.email} 
-                            onChange={handleChange} 
+                            {...register("email", {
+                                required: "El email es obligatorio",
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: "Email inválido"
+                                }
+                            })}  
                             placeholder="tu@email.com" 
                             type="email"
-                            className="form-input"
+                            className={`form-input ${errors.email ? 'input-error' : ''}`}
                             disabled={loading}
                         />
+                        {errors.email && (
+                            <p className="error-text">{errors.email.message}</p>
+                        )}
                     </div>
                     
                     <div className="form-group">
                         <label htmlFor="password" className="form-label">Contraseña</label>
                         <input 
                             id="password" 
-                            name="password" 
-                            value={formData.password} 
-                            onChange={handleChange} 
+                            {...register("password", {
+                                required: "La contraseña es obligatoria",
+                                minLength: {
+                                    value: 6,
+                                    message: "Mínimo 6 caracteres"
+                                }
+                            })}  
                             placeholder="••••••••" 
                             type="password"
-                            className="form-input"
+                            className={`form-input ${errors.password ? 'input-error' : ''}`}
                             disabled={loading}
                         />
+                        {errors.password && (
+                            <p className="error-text">{errors.password.message}</p>
+                        )}
                     </div>
 
                     <button 

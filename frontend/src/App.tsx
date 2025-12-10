@@ -1,10 +1,9 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useAuthContext } from './context/AuthContext';
+import { TaskProvider } from "./context/TaskContext";
 import LoginForm from "./pages/AuthPage/LoginForm";
 import RegisterForm from "./pages/AuthPage/RegisterForm";
-import HomePage from './pages/HomePage/HomePage';
 import TaskPage from "./pages/TaskPage/TaskPage";
-import { TaskProvider } from "./context/TaskContext";
 
 function App() {
   const { user, loading } = useAuthContext()
@@ -16,7 +15,6 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginForm/>}/>
         <Route path="/register" element={<RegisterForm/>}/>
-        <Route path="/home" element={user ? <HomePage/>: <Navigate to="/" />}/>
         <Route path="/tasks" element={
           user 
           ? <TaskProvider><TaskPage/></TaskProvider> 

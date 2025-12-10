@@ -1,31 +1,26 @@
 import './Form.css'
-import { useState, type FormEvent, ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { useForm } from "react-hook-form";
+import { RegisterData } from '../../types/user.type';
 
 export default function RegisterForm() {
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: ""
-    });
-    const { register, loading, error } = useAuth();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+    } = useForm<RegisterData>()
+    const { register: registerUser, loading, error: authError } = useAuth();
     const navigate = useNavigate()
 
-    const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-    
-        const success = await register(formData);
+    const onSubmit = async(data: RegisterData) => {    
+        const success = await registerUser(data);
     
         if (success) {
-            setFormData({ name: "", email: "", password: ""})
-            navigate("/home")
+            reset()
+            navigate("/tasks")
         }
-    }
-    
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({...prev, [name]: value}))
     }
     
     return(
@@ -37,11 +32,11 @@ export default function RegisterForm() {
                     <p className="auth-subtitle">Comienza tu experiencia con nosotros</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="auth-form">
-                    {error && (
+                <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
+                    {authError && (
                         <div className="error-message">
                             <span>⚠️</span>
-                            {error}
+                            {authError}
                         </div>
                     )}
                     
@@ -49,42 +44,67 @@ export default function RegisterForm() {
                         <label htmlFor="name" className="form-label">Nombre Completo</label>
                         <input 
                             id="name" 
-                            name="name" 
-                            value={formData.name} 
-                            onChange={handleChange} 
+                            {...register("name", {
+                                required: "El nombre es obligatorio",
+                                minLength: {
+                                    value: 2,
+                                    message: "Mínimo 2 caracteres"
+                                }
+                            })}  
                             placeholder="Tu nombre completo" 
                             type="text"
-                            className="form-input"
+                            className={`form-input ${errors.name ? 'input-error' : ''}`}
                             disabled={loading}
                         />
+                        {errors.name && (
+                            <p className="error-text">{errors.name.message}</p>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">Correo Electrónico</label>
                         <input 
                             id="email" 
-                            name="email" 
-                            value={formData.email} 
-                            onChange={handleChange} 
+                            {...register("email", {
+                                required: "El email es obligatorio",
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: "Email inválido"
+                                }
+                            })}  
                             placeholder="tu@email.com" 
                             type="email"
-                            className="form-input"
+                            className={`form-input ${errors.email ? 'input-error' : ''}`}
                             disabled={loading}
                         />
+                        {errors.email && (
+                            <p className="error-text">{errors.email.message}</p>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="password" className="form-label">Contraseña</label>
                         <input 
                             id="password" 
-                            name="password" 
-                            value={formData.password} 
-                            onChange={handleChange} 
+                            {...register("password", {
+                                required: "La contraseña es obligatoria",
+                                minLength: {
+                                    value: 6,
+                                    message: "Mínimo 6 caracteres"
+                                },
+                                pattern: {
+                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                                    message: "Debe contener al menos una mayúscula, una minúscula y un número"
+                                }
+                            })}  
                             placeholder="••••••••" 
                             type="password"
-                            className="form-input"
+                            className={`form-input ${errors.password ? 'input-error' : ''}`}
                             disabled={loading}
                         />
+                        {errors.password && (
+                            <p className="error-text">{errors.password.message}</p>
+                        )}
                     </div>
 
                     <button 

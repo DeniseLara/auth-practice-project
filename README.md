@@ -38,6 +38,7 @@ Proyecto fullstack creado como práctica para reforzar conocimientos en backend 
 - Marcar/desmarcar como completadas  
 - Eliminar tareas individuales  
 - Filtro por estado: **Todas / Completadas / Pendientes**
+- Editar tareas 
 
 ---
 
@@ -55,8 +56,7 @@ Proyecto fullstack creado como práctica para reforzar conocimientos en backend 
 
 ---
 
-## 🚧 Próximas Funcionalidades
-- Editar tareas  
+## 🚧 Próximas Funcionalidades 
 - Buscar tareas por texto  
 - Categorías / etiquetas  
 - Tema oscuro / claro  

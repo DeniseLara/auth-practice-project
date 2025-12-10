@@ -17,3 +17,5 @@ export interface UpdateTaskData {
   description?: string;
   completed?: boolean;
 }
+
+export type TaskFilterType = 'all' | 'completed' | 'pending'

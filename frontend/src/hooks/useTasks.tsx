@@ -8,21 +8,34 @@ export function useTasks() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState("")
 
-    const fetchTasks = useCallback(async() => {
+    const fetchTasks = useCallback(async(search?: string) => {
         setError(null);
         setLoading(true)
 
         try {
-            const res = await fetch(API, {
-                headers: { "Content-type": "application/json" },
+            const url = new URL(API);
+            
+            if (search?.trim()) {
+                url.searchParams.append('search', search.trim());
+            }
+
+            const response = await fetch(url, {
+                headers: { 
+                    "Content-Type": "application/json" 
+                },
                 credentials: "include"
-            })
+            });
 
-            if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+            if (!response.ok) {
+                const errorText = await response.text().catch(() => response.statusText);
+                throw new Error(`Error ${response.status}: ${errorText}`);
+            }
 
-            const data = await res.json()
-            setTasks(data)
+            const data: Task[] = await response.json();
+            setTasks(data);
+
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error al cargar tareas');
             console.error('Error al obtener tareas:', err);
@@ -31,6 +44,18 @@ export function useTasks() {
         }
 
     }, []);
+
+    // Función específica para buscar
+    const searchTasks = useCallback((term: string) => {
+        setSearchTerm(term);
+        fetchTasks(term); // Llama a fetchTasks con el término de búsqueda
+    }, [fetchTasks]);
+
+    // Función para limpiar búsqueda
+    const clearSearch = useCallback(() => {
+        setSearchTerm('');
+        fetchTasks(); // Llama sin parámetro
+    }, [fetchTasks]);
 
 
     const createTask = useCallback(async (taskData: TaskFormData) => {
@@ -136,8 +161,8 @@ export function useTasks() {
 
 
     useEffect(() =>  {
-        fetchTasks()
-    }, [fetchTasks]);
+        fetchTasks(searchTerm)
+    }, [fetchTasks, searchTerm]);
     
 
     return {
@@ -145,6 +170,9 @@ export function useTasks() {
         loading,
         error,
         fetchTasks,
+        searchTasks,
+        searchTerm,
+        clearSearch,
         createTask,
         toggleCompletion,
         handleEdit,

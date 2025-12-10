@@ -12,11 +12,25 @@ export class TaskService {
         private readonly taskRepository: Repository<Task>
     ) {}
 
-    async getAllTasks(userId: string): Promise<Task[]>{
-        const habits = await this.taskRepository.find({
-            where: { userId: userId }
-        })
-        return habits.map(habit => this.formatTask(habit))
+    async getAllTasks(userId: string, search?: string): Promise<Task[]>{
+        const queryBuilder = this.taskRepository.createQueryBuilder('task');
+
+        queryBuilder.where('task.userId = :userId', { userId });
+
+        if (search && search.trim() !== "") {
+            queryBuilder.andWhere(
+                '(LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search))',
+                { search: `%${search}%` }
+            );
+        }
+
+        // Ordenar por fecha de creación (más reciente primero)
+        queryBuilder.orderBy('task.createdAt', 'DESC');
+
+        // Ejecutar query
+        const tasks = await queryBuilder.getMany();
+        
+        return tasks.map(task => this.formatTask(task));
     }
 
     async createTask(body: CreateTaskDto, userId: string): Promise<Task> {
