@@ -56,7 +56,7 @@ Proyecto fullstack creado como práctica para reforzar conocimientos en backend 
 
 ---
 
-## 🚧 Próximas Funcionalidades 
+## 🚧 Próximas Funcionalidades
 - Buscar tareas por texto  
 - Categorías / etiquetas  
 - Tema oscuro / claro  
