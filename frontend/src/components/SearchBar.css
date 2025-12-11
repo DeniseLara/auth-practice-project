@@ -1,0 +1,126 @@
+.search-form {
+  margin-bottom: var(--spacing-lg);
+  width: 100%;
+}
+
+.search-container {
+  display: flex;
+  width: 100%;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--spacing-md);
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-xl);
+  padding-left: 3rem; 
+  padding-right: 3rem; 
+  background: var(--color-bg-surface);
+  border: 2px solid transparent;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--color-text-muted);
+  font-weight: 300;
+}
+
+.search-input:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(99, 102, 241, 0.1);
+}
+
+.search-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), var(--shadow-md);
+}
+
+.search-input:focus + .search-icon {
+  color: var(--color-primary);
+}
+
+.btn-clear-inline {
+  position: absolute;
+  right: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 1.4rem;
+  padding: 0;
+}
+
+.btn-clear-inline:hover {
+  color: var(--color-error);
+  background: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
+}
+
+.btn-clear-inline:active {
+  transform: scale(0.95);
+}
+
+.search-form {
+  animation: slideIn 0.3s ease-out;
+}
+
+
+@media (max-width: 768px) {
+  .search-input {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    padding-left: 2.75rem;
+    padding-right: 2.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .search-icon {
+    left: var(--spacing-sm);
+    font-size: 1.15rem;
+  }
+  
+  .btn-clear-inline {
+    width: 28px;
+    height: 28px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    padding: var(--spacing-md) var(--spacing-lg);
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .search-icon {
+    font-size: 1.1rem;
+  }
+}

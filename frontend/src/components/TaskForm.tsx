@@ -2,6 +2,7 @@ import './TaskForm.css'
 import { ChangeEvent, useState, type FormEvent } from 'react';
 import type { TaskFormData } from '../types/task.type';
 import { useTaskContext } from '../context/TaskContext';
+import { IoClose, IoAddCircleOutline } from 'react-icons/io5';
 
 const DEFAULT_VALUES: TaskFormData = {
   title: "",
@@ -42,68 +43,99 @@ export default function TaskForm({
   }
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <div className="task-form-container">
-        <div className="modal-header">
-          <h2>Crear Tarea</h2>
-          <button className="modal-close" onClick={onClose} aria-label="Cerrar">
-            &times;
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="task-form" noValidate>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="task-title" className="form-label">
-                Título
-                <span className="form-label__required">*</span>
-              </label>
-              <input
-                id="task-title"
-                type="text"
-                name='title'
-                value={formData.title}
-                onChange={handleChange}
-                placeholder="Ej: Completar informe mensual"
-                className="form-input"
-                disabled={isLoading}
-                required
-                maxLength={100}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="task-description" className="form-label">
-                Descripción
-              </label>
-              <textarea
-                id="task-description"
-                name='description'
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Describe los detalles de tu tarea..."
-                className="form-textarea"
-                disabled={isLoading}
-                maxLength={300}
-                rows={3}
-              />
-              <span className="form-hint">
-                {formData.description.length}/300 caracteres
-              </span>
+    <div className="create-modal-overlay" onClick={onClose}>
+      <div className="create-modal-content" onClick={(e) => e.stopPropagation()}>
+        
+        <div className="create-modal-header">
+          <div className="create-modal-header-content">
+            <div>
+              <h2 className="create-modal-title">Nueva Tarea</h2>
+              <p className="create-modal-subtitle">Crea una nueva tarea para organizar tu día</p>
             </div>
           </div>
-
-          <button
-            type="submit"
-            className="submit-btn"
-            disabled={isLoading}
-            aria-busy={isLoading}
+          <button 
+            className="create-modal-close" 
+            onClick={onClose} 
+            aria-label="Cerrar"
+            type="button"
           >
-            {isLoading && <span className="btn-spinner"></span>}
-            <span>Crear tarea</span>
+            <IoClose />
           </button>
-        </form>
         </div>
+
+        <form onSubmit={handleSubmit} className="create-task-form">
+          <div className="create-form-body">
+            
+            <div className="create-form-group">
+              <label htmlFor="create-title" className="create-form-label">
+                Título
+                <span className="create-form-label__required">*</span>
+              </label>
+              <input
+                id="create-title"
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Ej: Completar proyecto de React"
+                className="create-form-input"
+                maxLength={100}
+                autoFocus
+              />
+            </div>
+
+            <div className="create-form-group">
+              <div className="create-form-label-row">
+                <label htmlFor="create-description" className="create-form-label">
+                  Descripción
+                </label>
+                <span className="create-form-hint">
+                  {formData.description.length}/300
+                </span>
+              </div>
+              <textarea
+                id="create-description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Describe los detalles de tu tarea (opcional)"
+                className="create-form-textarea"
+                rows={4}
+                maxLength={300}
+              />
+            </div>
+
+          </div>
+
+          <div className="create-modal-footer">
+            <button
+              type="button"
+              onClick={onClose}
+              className="create-btn-cancel"
+              disabled={isLoading}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="create-btn-submit"
+              disabled={isLoading || !formData.title.trim()}
+            >
+              {isLoading ? (
+                <>
+                  <span className="create-btn-spinner"></span>
+                  Creando...
+                </>
+              ) : (
+                <>
+                  <IoAddCircleOutline />
+                  Crear Tarea
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+
       </div>
     </div>
   );

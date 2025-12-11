@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Task, UpdateTaskData } from "../types/task.type";
 import { TaskFormData } from "../types/task.type";
 
@@ -48,14 +48,23 @@ export function useTasks() {
     // Función específica para buscar
     const searchTasks = useCallback((term: string) => {
         setSearchTerm(term);
-        fetchTasks(term); // Llama a fetchTasks con el término de búsqueda
-    }, [fetchTasks]);
+    }, []);
 
     // Función para limpiar búsqueda
     const clearSearch = useCallback(() => {
         setSearchTerm('');
-        fetchTasks(); // Llama sin parámetro
-    }, [fetchTasks]);
+    }, []);
+
+    // Filtrar tareas localmente
+    const filteredTasks = useMemo(() => {
+        if (!searchTerm.trim()) return tasks;
+        
+        const searchLower = searchTerm.toLowerCase();
+        return tasks.filter(task => 
+            task.title.toLowerCase().includes(searchLower) ||
+            (task.description && task.description.toLowerCase().includes(searchLower))
+        );
+    }, [tasks, searchTerm])
 
 
     const createTask = useCallback(async (taskData: TaskFormData) => {
@@ -161,8 +170,8 @@ export function useTasks() {
 
 
     useEffect(() =>  {
-        fetchTasks(searchTerm)
-    }, [fetchTasks, searchTerm]);
+        fetchTasks()
+    }, [fetchTasks]);
     
 
     return {
@@ -171,6 +180,7 @@ export function useTasks() {
         error,
         fetchTasks,
         searchTasks,
+        filteredTasks,
         searchTerm,
         clearSearch,
         createTask,

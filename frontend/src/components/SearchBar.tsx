@@ -1,4 +1,7 @@
-import { ChangeEvent, useState } from 'react';
+import './SearchBar.css'
+import { ChangeEvent, useState, useEffect } from 'react';
+import { IoSearchOutline, IoCloseCircle } from 'react-icons/io5';
+
 
 interface SearchBarProps {
     onSearch: (term: string) => void;
@@ -8,10 +11,23 @@ interface SearchBarProps {
 
 export function SearchBar({ onSearch, onClear, currentSearch }: SearchBarProps) {
     const [inputValue, setInputValue] = useState(currentSearch);
+
+    // Debounce optimizado
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            onSearch(inputValue);
+        }, 300); // Reducido a 300ms para mejor respuesta
+
+        return () => clearTimeout(timeoutId);
+    }, [inputValue, onSearch]);
+
+    // Sincronización cuando se limpia desde fuera
+    useEffect(() => {
+        setInputValue(currentSearch);
+    }, [currentSearch]);
     
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newInputValue = e.target.value;
-        setInputValue(newInputValue)
+        setInputValue(e.target.value)
     }
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -28,6 +44,7 @@ export function SearchBar({ onSearch, onClear, currentSearch }: SearchBarProps) 
         <form onSubmit={handleSubmit} className="search-form">
             <div className="search-container">
                 <div className="search-input-wrapper">
+                    <IoSearchOutline className="search-icon" />
                     <input
                         type="text"
                         value={inputValue}
@@ -35,19 +52,17 @@ export function SearchBar({ onSearch, onClear, currentSearch }: SearchBarProps) 
                         placeholder="Buscar tareas..."
                         className="search-input"
                     />
+                    {inputValue && (
+                        <button 
+                            type="button" 
+                            onClick={handleClear}
+                            className="btn-clear-inline"
+                            aria-label="Limpiar búsqueda"
+                        >
+                            <IoCloseCircle />
+                        </button>
+                    )}
                 </div>
-                <button type="submit" className="btn-search">
-                    Buscar
-                </button>
-                {currentSearch && (
-                    <button 
-                        type="button" 
-                        onClick={handleClear}
-                        className="btn-clear"
-                    >
-                        Limpiar
-                    </button>
-                )}
             </div>
         </form>
     );

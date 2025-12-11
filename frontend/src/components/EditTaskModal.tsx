@@ -2,6 +2,7 @@ import './EditTaskModal.css'
 import { FormEvent, useState } from "react";
 import { Task } from "../types/task.type";
 import { useTaskContext } from '../context/TaskContext';
+import { IoClose, IoSaveOutline, IoPencil } from 'react-icons/io5';
 
 type EditTaskModalProps = {
     task: Task
@@ -40,54 +41,106 @@ export default function EditTaskModal({ task, onClose }: EditTaskModalProps) {
     }
     
     return(
-        <div className="modal-overlay">
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2>Editar Tarea</h2>
-                    <button className="modal-close" onClick={onClose} aria-label="Cerrar">
-                        &times;
+        <div className="edit-modal-overlay" onClick={onClose}>
+            <div className="edit-modal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="edit-modal-header">
+                    <div className="edit-modal-header-content">
+                        <div>
+                            <h2 className="edit-modal-title">Editar Tarea</h2>
+                            <p className="edit-modal-subtitle">
+                                Modifica los detalles de tu tarea
+                            </p>
+                        </div>
+                    </div>
+                    <button 
+                        className="edit-modal-close" 
+                        onClick={onClose} 
+                        aria-label="Cerrar editor"
+                        type="button"
+                    >
+                        <IoClose />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="title">Título *</label>
-                        <input
-                            id="title"
-                            type="text"
-                            value={formData.title}
-                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            placeholder="Título de la tarea"
-                        />
+                <form onSubmit={handleSubmit} className="edit-task-form">
+                    <div className="edit-form-body">
+                        <div className="edit-form-group">
+                            <label htmlFor="edit-title" className="edit-form-label">
+                                Título de la tarea
+                                <span className="edit-form-label__required">*</span>
+                            </label>
+                            <input
+                                id="edit-title"
+                                type="text"
+                                value={formData.title}
+                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                placeholder="¿Qué necesitas hacer?"
+                                className="edit-form-input"
+                                maxLength={100}
+                                autoFocus
+                                disabled={loading}
+                            />
+                            <div className="edit-form-char-count">
+                                {formData.title.length}/100
+                            </div>
+                        </div>
+
+                        <div className="edit-form-group">
+                            <div className="edit-form-label-row">
+                                <label htmlFor="edit-description" className="edit-form-label">
+                                    Descripción
+                                </label>
+                                <span className="edit-form-hint">
+                                    Opcional
+                                </span>
+                            </div>
+                            <textarea
+                                id="edit-description"
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                placeholder="Detalles adicionales, notas o instrucciones..."
+                                className="edit-form-textarea"
+                                rows={4}
+                                maxLength={300}
+                                disabled={loading}
+                            />
+                            <div className="edit-form-char-count">
+                                {formData.description.length}/300
+                            </div>
+                        </div>
+
+                        {error && (
+                            <div className="edit-form-error">
+                                {error}
+                            </div>
+                        )}
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="description">Descripción</label>
-                        <textarea
-                            id="description"
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            placeholder="Descripción de la tarea (opcional)"
-                            rows={4}
-                        />
-                    </div>
-
-                    {error && <div className="error-message">{error}</div>}
-
-                    <div className="modal-actions">
-                        <button 
-                            type="button" 
+                    <div className="edit-modal-footer">
+                        <button
+                            type="button"
                             onClick={onClose}
-                            className="btn-secondary"
+                            className="edit-btn-cancel"
+                            disabled={loading}
                         >
                             Cancelar
                         </button>
-                        <button 
-                            type="submit" 
-                            className="btn-primary"
+                        <button
+                            type="submit"
+                            className="edit-btn-save"
                             disabled={loading || !formData.title.trim()}
                         >
-                            {loading ? "Guardando..." : "Guardar Cambios"}
+                            {loading ? (
+                                <>
+                                    <span className="edit-btn-spinner"></span>
+                                    Guardando...
+                                </>
+                            ) : (
+                                <>
+                                    <IoSaveOutline />
+                                    Guardar Cambios
+                                </>
+                            )}
                         </button>
                     </div>
                 </form>

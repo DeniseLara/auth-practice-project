@@ -1,10 +1,11 @@
 import './TaskPage.css'
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Task, TaskFilterType } from '../../types/task.type';
 import { useTaskContext } from '../../context/TaskContext';
 import { SearchBar } from '../../components/SearchBar';
 import { useAuth } from '../../hooks/useAuth';
 import { CiLogout } from "react-icons/ci";
+import { IoCreateOutline } from "react-icons/io5";
 
 import TaskForm from '../../components/TaskForm';
 import TaskList from '../../components/TaskList';
@@ -18,6 +19,7 @@ export default function TaskPage() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const { logout } = useAuth();
     const { 
+        filteredTasks,
         tasks, 
         loading,
         searchTerm,
@@ -25,37 +27,43 @@ export default function TaskPage() {
         clearSearch, 
     } = useTaskContext()
 
-    if (loading) return <p>Cargando...</p>
 
-    const filteredTasks = tasks.filter(task => {
-        if (filter === "completed") return task.completed
-        if (filter === "pending") return !task.completed
-        return true  
-    })
+    const filteredByStatus = useMemo(() => {
+        return filteredTasks.filter(task => {
+            if (filter === "completed") return task.completed
+            if (filter === "pending") return !task.completed
+            return true
+        })
+    }, [filteredTasks, filter])
 
     const handleLogout = async() => {
         await logout()
     }
 
+    if (loading) return <p>Cargando...</p>
+
     return(
         <section className="task-page">
                 <header className="header-content">
                     <div className="header-content__text">
-                    <h1 className="task-page__title">Tus Tareas</h1>
+                    <h1 className="task-page__title">Tu Panel de Productividad</h1>
                     <p className="task-page__subtitle">
-                        Organiza y completa tus tareas diarias
+                        Una herramienta inteligente para <strong>nunca olvidar nada</strong>. 
+                        Registra tus ideas, realiza <strong>búsquedas rápidas</strong> y filtra fácilmente tus pendientes de lo ya realizado.
                     </p>
                     </div>
 
                     <button className='btn-create-task' onClick={() => setShowCreateModal(true)}>
-                        <span>Crear Tarea</span>
+                        <IoCreateOutline/>
                     </button>
                 </header>
 
                 {tasks.length === 0 ? (
                     <div className="empty-state">
                         <span className="empty-state__icon">📝</span>
-                            <h3 className="empty-state__title">No hay tareas aún</h3>
+                            <h3 className="empty-state__title">
+                                {searchTerm ? 'No hay tareas que coincidan con tu búsqueda' : 'No hay tareas aún'}
+                            </h3>
                             <p className="empty-state__text">
                                 Comienza agregando tu primera tarea arriba
                             </p>
@@ -69,12 +77,12 @@ export default function TaskPage() {
                         />
 
                         <FilterTasks 
-                            tasks={tasks} 
+                            tasks={filteredTasks} 
                             filter={filter} 
                             setFilter={setFilter}
                         />
 
-                        {filteredTasks.length === 0 ? (
+                        {filteredByStatus.length === 0 ? (
                             <div className="empty-state">
                                 <span className="empty-state__icon">🔍</span>
                                 <h3 className="empty-state__title">
@@ -88,7 +96,7 @@ export default function TaskPage() {
                             </div>
                         ) : ( 
                             <TaskList 
-                                filteredTasks={filteredTasks}
+                                filteredTasks={filteredByStatus}
                                 onEditClick={(task) => setEditingTask(task)}
                             />
                         )}

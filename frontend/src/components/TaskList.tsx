@@ -23,6 +23,7 @@ export default function TaskList({
         e.stopPropagation();
         setIsMenuOpen(isMenuOpen === taskId ? null : taskId);
     };
+
     
     return(
         <section>
